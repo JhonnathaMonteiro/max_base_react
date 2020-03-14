@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
-import './App.css';
+
+import classes from './App.module.css';
 import Person from './Person/Person'
 
-export default class App extends Component {
+
+class App extends Component {
   state = {
     persons: [
       {id:'asdasd1', name: 'Max', age: 28},
@@ -10,20 +12,16 @@ export default class App extends Component {
       {id: 'sadfgg', name: 'BB', age: 22}
     ],
     otherState: "Other state",
-    showPerson: false
+    showPersons: false
   }
 
 nameChangeHandler = (event, id) => {
   const personIndex = this.state.persons.findIndex( p => {
     return p.id === id;
   });
-
   const person = {...this.state.persons[personIndex]};
-
   person.name = event.target.value;
-
   const persons = [...this.state.persons];
-
   persons[personIndex] = person;
   this.setState({
     persons: persons
@@ -43,23 +41,14 @@ deletePersonHandler = (personIndex) => {
 }
 
   render() {
-
-    const style = {
-      backgroundColor: 'green',
-      color: 'white',
-      font: 'inherit',
-      border: '1px solid blue',
-      padding: '8px',
-      cursor: 'pointer' 
-    }
-    
     // Conditionaly show method
     let persons = null;
+    let btnClass = [classes.button]
     if (this.state.showPersons) {
       persons = (
         <div>
           {this.state.persons.map((person, index)=>{
-            return <Person 
+            return  <Person 
             click = {() => this.deletePersonHandler(index)} 
             name = {person.name} 
             age={person.age}
@@ -69,22 +58,29 @@ deletePersonHandler = (personIndex) => {
         </div>
       );
 
-      style.backgroundColor = 'red';
+      btnClass.push(classes.red)
     }
 
-    let classes = ['red', 'bold'].join(' ');
+    const assignedlasses = [];
+    if (this.state.persons.length <= 2) {
+      assignedlasses.push(classes.bold)
+    }
+    if (this.state.persons.length <= 1) {
+      assignedlasses.push(classes.red)
+    }
 
     return (
-      <div className="App">
-      <h1>Hi, I'm the React App</h1>
-      <p className={classes}>This is working</p>
-      <button 
-        onClick={this.togglePersonsHandler}
-        style={style}
-      >Toggle Persons</button>
-      {persons} 
-    </div>
+        <div className={classes.App}>
+          <h1>Hi, I'm the React App</h1>
+          <p className={assignedlasses.join(' ')}>This is working</p>
+          <button 
+            className={btnClass.join(' ')}
+            onClick={this.togglePersonsHandler}
+          >Toggle Persons</button>
+          {persons} 
+        </div>
     )
   }
 }
 
+export default App;
